@@ -1,80 +1,86 @@
 from distutils.core import setup
 from distutils.extension import Extension
-import numpy
-import sys
-import os
-sys.path.insert(0, os.path.join('.', 'pyearth'))
-from _version import __version__
 
-# Determine whether to use Cython
-if '--cythonize' in sys.argv:
-    cythonize_switch = True
-    del sys.argv[sys.argv.index('--cythonize')]
+if '--help' in sys.argv[1:] or \
+    sys.argv[1] in ('--help-commands', 'egg_info', 'clean', '--version'):
+        cythonize_switch = False
+        ext_modules = []
 else:
-    cythonize_switch = False
+    import numpy
+    import sys
+    import os
+    sys.path.insert(0, os.path.join('.', 'pyearth'))
+    from _version import __version__
 
-# Find all includes
-local_inc = 'pyearth'
-numpy_inc = numpy.get_include()
+    # Determine whether to use Cython
+    if '--cythonize' in sys.argv:
+        cythonize_switch = True
+        del sys.argv[sys.argv.index('--cythonize')]
+    else:
+        cythonize_switch = False
 
-# Set up the ext_modules for Cython or not, depending
-if cythonize_switch:
-    from Cython.Distutils import build_ext
-    from Cython.Build import cythonize
-    ext_modules = cythonize(
-        [Extension(
-            "pyearth._util", ["pyearth/_util.pyx"], include_dirs=[numpy_inc]),
-         Extension(
-             "pyearth._basis",
-             ["pyearth/_basis.pyx"],
-             include_dirs=[numpy_inc]),
-         Extension(
-             "pyearth._record",
-             ["pyearth/_record.pyx"],
-             include_dirs=[numpy_inc]),
-         Extension(
-             "pyearth._pruning",
-             ["pyearth/_pruning.pyx"],
-             include_dirs=[local_inc,
-                           numpy_inc]),
-         Extension(
-             "pyearth._forward",
-             ["pyearth/_forward.pyx"],
-             include_dirs=[local_inc,
-                           numpy_inc]),
-         Extension(
-             "pyearth._types",
-             ["pyearth/_types.pyx"],
-             include_dirs=[local_inc,
-                           numpy_inc])
-         ])
-else:
-    ext_modules = [Extension(
-        "pyearth._util", ["pyearth/_util.c"], include_dirs=[numpy_inc]),
-        Extension(
-            "pyearth._basis",
-            ["pyearth/_basis.c"],
-            include_dirs=[numpy_inc]),
-        Extension(
-            "pyearth._record",
-            ["pyearth/_record.c"],
-            include_dirs=[numpy_inc]),
-        Extension(
-            "pyearth._pruning",
-            ["pyearth/_pruning.c"],
-            include_dirs=[local_inc,
-                          numpy_inc]),
-        Extension(
-            "pyearth._forward",
-            ["pyearth/_forward.c"],
-            include_dirs=[local_inc,
-                          numpy_inc]),
-        Extension(
-            "pyearth._types",
-            ["pyearth/_types.c"],
-            include_dirs=[local_inc,
-                          numpy_inc])
-    ]
+    # Find all includes
+    local_inc = 'pyearth'
+    numpy_inc = numpy.get_include()
+
+    # Set up the ext_modules for Cython or not, depending
+    if cythonize_switch:
+        from Cython.Distutils import build_ext
+        from Cython.Build import cythonize
+        ext_modules = cythonize(
+            [Extension(
+                "pyearth._util", ["pyearth/_util.pyx"], include_dirs=[numpy_inc]),
+             Extension(
+                 "pyearth._basis",
+                 ["pyearth/_basis.pyx"],
+                 include_dirs=[numpy_inc]),
+             Extension(
+                 "pyearth._record",
+                 ["pyearth/_record.pyx"],
+                 include_dirs=[numpy_inc]),
+             Extension(
+                 "pyearth._pruning",
+                 ["pyearth/_pruning.pyx"],
+                 include_dirs=[local_inc,
+                               numpy_inc]),
+             Extension(
+                 "pyearth._forward",
+                 ["pyearth/_forward.pyx"],
+                 include_dirs=[local_inc,
+                               numpy_inc]),
+             Extension(
+                 "pyearth._types",
+                 ["pyearth/_types.pyx"],
+                 include_dirs=[local_inc,
+                               numpy_inc])
+             ])
+    else:
+        ext_modules = [Extension(
+            "pyearth._util", ["pyearth/_util.c"], include_dirs=[numpy_inc]),
+            Extension(
+                "pyearth._basis",
+                ["pyearth/_basis.c"],
+                include_dirs=[numpy_inc]),
+            Extension(
+                "pyearth._record",
+                ["pyearth/_record.c"],
+                include_dirs=[numpy_inc]),
+            Extension(
+                "pyearth._pruning",
+                ["pyearth/_pruning.c"],
+                include_dirs=[local_inc,
+                              numpy_inc]),
+            Extension(
+                "pyearth._forward",
+                ["pyearth/_forward.c"],
+                include_dirs=[local_inc,
+                              numpy_inc]),
+            Extension(
+                "pyearth._types",
+                ["pyearth/_types.c"],
+                include_dirs=[local_inc,
+                              numpy_inc])
+        ]
 
 # Create a dictionary of arguments for setup
 setup_args = {'name': 'py-earth',
