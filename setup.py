@@ -1,6 +1,8 @@
 from distutils.core import setup
 from distutils.extension import Extension
 
+from _version import __version__
+
 if '--help' in sys.argv[1:] or \
     sys.argv[1] in ('--help-commands', 'egg_info', 'clean', '--version'):
         cythonize_switch = False
@@ -10,7 +12,6 @@ else:
     import sys
     import os
     sys.path.insert(0, os.path.join('.', 'pyearth'))
-    from _version import __version__
 
     # Determine whether to use Cython
     if '--cythonize' in sys.argv:
