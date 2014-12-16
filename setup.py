@@ -1,6 +1,8 @@
 from distutils.core import setup
 from distutils.extension import Extension
 
+import sys
+import os
 sys.path.insert(0, os.path.join('.', 'pyearth'))
 from _version import __version__
 
@@ -10,8 +12,6 @@ if '--help' in sys.argv[1:] or \
         ext_modules = []
 else:
     import numpy
-    import sys
-    import os
 
     # Determine whether to use Cython
     if '--cythonize' in sys.argv:
